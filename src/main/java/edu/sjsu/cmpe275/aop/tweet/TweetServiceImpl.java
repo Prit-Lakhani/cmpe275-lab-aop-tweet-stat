@@ -22,10 +22,7 @@ public class TweetServiceImpl implements TweetService {
 
     @Override
     public UUID reply(String user, UUID originalMessage, String message) throws IOException, IOException, IllegalArgumentException {
-        System.out.println("Original replying id :" + originalMessage);
-        UUID id = UUID.randomUUID();
-//        System.out.println("Return id : " + id);
-        return id;
+        return UUID.randomUUID();
     }
 
 

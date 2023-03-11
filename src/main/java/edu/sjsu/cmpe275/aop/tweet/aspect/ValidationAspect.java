@@ -1,6 +1,5 @@
 package edu.sjsu.cmpe275.aop.tweet.aspect;
 
-import edu.sjsu.cmpe275.aop.tweet.TweetServiceImpl;
 import edu.sjsu.cmpe275.aop.tweet.TweetStatsServiceImpl;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
@@ -9,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 
 import java.io.IOException;
-import java.util.UUID;
 
 
 @Aspect
@@ -85,14 +83,6 @@ public class ValidationAspect {
 				throw new IllegalArgumentException("Invalid UUID");
 			}
 
-//			if(validate.userMap.get(obj[0])[0].contains(obj[1].toString())){
-//				throw new IllegalArgumentException("User is trying to like self-posted message");
-//			}
-
-			//try to like same message more than one time
-//			if(validate.tweetMap.get(obj[1])[1].contains(obj[0].toString())){
-//				throw new IllegalArgumentException("User is trying like the same message again");
-//			}
 		}
 
 		//validating report()
