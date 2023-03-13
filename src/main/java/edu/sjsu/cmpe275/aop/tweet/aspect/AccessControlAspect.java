@@ -32,17 +32,17 @@ public class AccessControlAspect {
 
 		//user tries to reply their own message
 		if(obj[0] == currUser) {
-			throw new IllegalArgumentException("User cannot reply to their own message!");
+			throw new IllegalArgumentException( joinPoint.getSignature().getName() + " service : User cannot reply to their own message!");
 		}
 
 		//user has blocked the original message sender
 		if(stats.userMap.get(obj[0])[5].contains(currUser)){
-			throw new AccessControlException("Current user has blocked the original sender");
+			throw new AccessControlException( joinPoint.getSignature().getName() + " service : Current user has blocked the original sender");
 		}
 
 		//message is not shared with user
 		if(!stats.tweetMap.get(obj[1])[3].contains(obj[0].toString())){
-			throw new AccessControlException("Current user has not been shared with the original message");
+			throw new AccessControlException( joinPoint.getSignature().getName() + " service : Current user has not been shared with the original message");
 		}
 	}
 
@@ -53,12 +53,12 @@ public class AccessControlAspect {
 
 		//message does not exist
 		if(!stats.tweetMap.containsKey(obj[1])){
-			throw new AccessControlException("The given message does not exist");
+			throw new AccessControlException( joinPoint.getSignature().getName() + " service : The given message does not exist");
 		}
 
 		//user trires to like already liked message
 		if(stats.tweetMap.get(obj[1])[1].contains(obj[0].toString())){
-			throw new AccessControlException("The message with given ID is already successfully liked by the same user");
+			throw new AccessControlException( joinPoint.getSignature().getName() + " service : The message with given ID is already successfully liked by the same user");
 		}
 
 		//getting original sender of the messsage
@@ -73,12 +73,12 @@ public class AccessControlAspect {
 
 		//user tried to like his own message
 		if(currUser == obj[0].toString()){
-			throw new AccessControlException("User tries to like his own messasges");
+			throw new AccessControlException( joinPoint.getSignature().getName() + " service : User tries to like his own messasges");
 		}
 
 		//message has not shared with current user
 		if(!stats.tweetMap.get(obj[1])[3].contains(obj[0].toString())){
-			throw new AccessControlException("The given user has not been successfully shared with the given message");
+			throw new AccessControlException( joinPoint.getSignature().getName() + " service : The given user has not been successfully shared with the given message");
 		}
 	}
 
@@ -89,12 +89,12 @@ public class AccessControlAspect {
 
 		//message does not exist
 		if(!stats.tweetMap.containsKey(obj[1])){
-			throw new AccessControlException("The given message does not exist");
+			throw new AccessControlException( joinPoint.getSignature().getName() + " service : The given message does not exist");
 		}
 
 		//user trires to report already liked message
 		if(stats.tweetMap.get(obj[1])[2].contains(obj[0].toString())){
-			throw new AccessControlException("The message with given ID is already successfully reported by the same user");
+			throw new AccessControlException( joinPoint.getSignature().getName() + " service : The message with given ID is already successfully reported by the same user");
 		}
 
 		//getting original sender of the messsage
@@ -109,12 +109,12 @@ public class AccessControlAspect {
 
 		//user tries to report his own message
 		if(currUser == obj[0].toString()){
-			throw new AccessControlException("User tries to report his own messasges");
+			throw new AccessControlException( joinPoint.getSignature().getName() + " service : User tries to report his own messasges");
 		}
 
 		//message has not shared with current user
 		if(!stats.tweetMap.get(obj[1])[3].contains(obj[0].toString())){
-			throw new AccessControlException("The given user has not been successfully shared with the given message");
+			throw new AccessControlException( joinPoint.getSignature().getName() + " service : The given user has not been successfully shared with the given message");
 		}
 	}
 }

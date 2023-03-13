@@ -23,9 +23,9 @@ public class ValidationAspect {
 		//checking null or empty
 		for (Object o: obj) {
 			if(o == null ){
-				throw new IllegalArgumentException("Null value detected for the given parameter");
+				throw new IllegalArgumentException( joinPoint.getSignature().getName() + " service : Null value detected for the given parameter");
 			} else if (o == "") {
-				throw new IllegalArgumentException("Empty value detected for the given parameter");
+				throw new IllegalArgumentException( joinPoint.getSignature().getName() + " service : Empty value detected for the given parameter");
 			}
 		}
 
@@ -35,7 +35,7 @@ public class ValidationAspect {
 			System.out.println("Message length : "+obj[1].toString().length());
 			//validating message length
 			if(obj[1].toString().length() > 140){
-				throw new IllegalArgumentException("Message length must be less than 140 characters");
+				throw new IllegalArgumentException( joinPoint.getSignature().getName() + " service : Message length must be less than 140 characters");
 			}
 		}
 
@@ -45,7 +45,7 @@ public class ValidationAspect {
 
 			//validating message length
 			if(obj[2].toString().length() > 140){
-				throw new IllegalArgumentException("Message length must be less than 140 characters");
+				throw new IllegalArgumentException( joinPoint.getSignature().getName() + " service : Message length must be less than 140 characters");
 			}
 
 			//checking whether message is exist or not
@@ -62,7 +62,7 @@ public class ValidationAspect {
 
 			//checking if the user is trying to follow themselves
 			if(obj[0] == obj[1]){
-				throw new IllegalArgumentException("User is trying to follow him/her self");
+				throw new IllegalArgumentException( joinPoint.getSignature().getName() + " service : User is trying to follow him/her self");
 			}
 		}
 
@@ -72,7 +72,7 @@ public class ValidationAspect {
 
 			//checking if the user is trying to block themselves
 			if(obj[0] == obj[1]){
-				throw new IllegalArgumentException("User is trying to block him/her self");
+				throw new IllegalArgumentException( joinPoint.getSignature().getName() + " service : User is trying to block him/her self");
 			}
 		}
 	}

@@ -9,11 +9,8 @@ public class TweetStatsServiceImpl implements TweetStatsService {
 
 	@Override
 	public void resetStatsAndSystem() {
-		// TODO can use map.clear()
-
-		tweetMap = new HashMap<>();
-		userMap = new HashMap<>();
-
+		tweetMap.clear();
+		userMap.clear();
 	}
     
 	@Override
@@ -43,21 +40,10 @@ public class TweetStatsServiceImpl implements TweetStatsService {
 			int currSharedWithSetSize = tweetMap.get(key)[3].size();
 
 			//comparing size of the current tweet's sharedWithSet's size and maximum sharedWithSet
-			if(currSharedWithSetSize > maxSharedWithSetSize) {
-				maxSharedWithSetSize = currSharedWithSetSize;
-				mostPopMsgID = key;
-			}else{
-				//there is a tie
-				if(currSharedWithSetSize == maxSharedWithSetSize){
-					//if id is null then just assign a current shared set size to maximum shared set and update most popular msg id
-					if(mostPopMsgID == null){
-						maxSharedWithSetSize = currSharedWithSetSize;
-						mostPopMsgID = key;
-					//comparing current id (key) and most popular msg id and updating most pop msg by the smallest id (UUID)
-					} else if (key.compareTo(mostPopMsgID) < 0) {
-						maxSharedWithSetSize = currSharedWithSetSize;
-						mostPopMsgID = key;
-					}
+			if(currSharedWithSetSize > 0){
+				if(currSharedWithSetSize > maxSharedWithSetSize ||(currSharedWithSetSize == maxSharedWithSetSize && key.compareTo(mostPopMsgID) < 0 ) ) {
+					maxSharedWithSetSize = currSharedWithSetSize;
+					mostPopMsgID = key;
 				}
 			}
 		}
@@ -117,22 +103,24 @@ public class TweetStatsServiceImpl implements TweetStatsService {
 			lr = 2*l*r;
 
 			cScore = ((lsq + lr + rsq) / ((lsq - lr + rsq) + 1));
-
-			if (cScore > finalcScore) {
-				finalcScore = cScore;
-				ansKey = key;
-			} else if(cScore == finalcScore) {
-				if(ansKey == null) {
+			if(cScore > 0){
+				if (cScore > finalcScore) {
 					finalcScore = cScore;
 					ansKey = key;
-				}
-				else {
-					if (key.compareTo(ansKey) < 0) {
+				} else if(cScore == finalcScore) {
+					if(ansKey == null) {
 						finalcScore = cScore;
 						ansKey = key;
 					}
+					else {
+						if (key.compareTo(ansKey) < 0) {
+							finalcScore = cScore;
+							ansKey = key;
+						}
+					}
 				}
 			}
+
 		}
 		return ansKey;
 

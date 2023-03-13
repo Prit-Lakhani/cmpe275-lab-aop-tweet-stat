@@ -29,6 +29,6 @@ public class RetryAspect {
 			catch (Throwable e) {
 			}
 		}
-		throw new IOException(joinPoint.getSignature().getName()   +" cannot be executed due to network failure");
+		throw new IOException( joinPoint.getSignature().getName() + " service :  cannot be executed due to network failure");
 	}
 }
