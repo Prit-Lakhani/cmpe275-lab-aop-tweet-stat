@@ -15,19 +15,32 @@ public class App {
 		try {
 
 			UUID msg1 = tweeter.tweet("demo", "barbar");
-			tweeter.follow("test", "demo");
+			tweeter.follow("atest", "demo");
+			tweeter.follow("atest", "prit");
+
+			tweeter.follow("demo", "test");
+			tweeter.follow("demo", "prit");
+
+
 			UUID msg2 = tweeter.tweet("demo", "barbar");
 
-			tweeter.like("test",msg2);
-			tweeter.report("test",msg2);
-			tweeter.reply("test",msg2, "reply");
-			
+			tweeter.like("atest",msg2);
+			tweeter.report("atest",msg2);
+			tweeter.reply("atest",msg2, "reply");
+
+			tweeter.block("demo", "barbar");
+			tweeter.block("test", "barbar");
+			tweeter.block("demo", "barbar");
+			tweeter.block("test", "palice");
+
+
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 		System.out.println("Length : " + stats.getLengthOfLongestTweet());
-		System.out.println("Maximum fanout: " + stats.getMaximumMessageFanout());
+		System.out.println("Maximum fanout: " + stats.getMostUnpopularFollower());
 
 		ctx.close();
 	}

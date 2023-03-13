@@ -3,10 +3,7 @@ package edu.sjsu.cmpe275.aop.tweet;
 import java.util.*;
 
 public class TweetStatsServiceImpl implements TweetStatsService {
-    /***
-     * Following is a dummy implementation.
-     * You are expected to provide an actual implementation based on the requirements.
-     */
+
 	public HashMap<UUID, HashSet<String>[]> tweetMap = new HashMap<>();
 	public HashMap<String, HashSet<String>[]> userMap = new HashMap<>();
 
@@ -23,6 +20,7 @@ public class TweetStatsServiceImpl implements TweetStatsService {
 	public int getLengthOfLongestTweet() {
 		int length = 0;
 		for(UUID key : tweetMap.keySet()){
+			//getting message of each tweet from tweet map
 			HashSet<String> set = tweetMap.get(key)[0];
 			for(String setItem : set){
 				if(setItem.length() > length) {
@@ -30,7 +28,6 @@ public class TweetStatsServiceImpl implements TweetStatsService {
 				}
 			}
 		}
-		System.out.println( "lenght :" + length);
 		return length;
 	}
 
@@ -42,16 +39,21 @@ public class TweetStatsServiceImpl implements TweetStatsService {
 
 		for(UUID key: tweetMap.keySet()){
 
+			//getting shared message size from tweet map
 			int currSharedWithSetSize = tweetMap.get(key)[3].size();
 
+			//comparing size of the current tweet's sharedWithSet's size and maximum sharedWithSet
 			if(currSharedWithSetSize > maxSharedWithSetSize) {
 				maxSharedWithSetSize = currSharedWithSetSize;
 				mostPopMsgID = key;
 			}else{
+				//there is a tie
 				if(currSharedWithSetSize == maxSharedWithSetSize){
+					//if id is null then just assign a current shared set size to maximum shared set and update most popular msg id
 					if(mostPopMsgID == null){
 						maxSharedWithSetSize = currSharedWithSetSize;
 						mostPopMsgID = key;
+					//comparing current id (key) and most popular msg id and updating most pop msg by the smallest id (UUID)
 					} else if (key.compareTo(mostPopMsgID) < 0) {
 						maxSharedWithSetSize = currSharedWithSetSize;
 						mostPopMsgID = key;
@@ -65,14 +67,16 @@ public class TweetStatsServiceImpl implements TweetStatsService {
 	@Override
 	public String getMostUnpopularFollower() {
 		int maxBlockedBySize = 0;
-		String maxBlockedUser = (String) userMap.keySet().toArray()[0];
+		String maxBlockedUser = null;
 
 		for(String key: userMap.keySet()){
 			int blocksCount = userMap.get(key)[2].size();
-
-			if(blocksCount > maxBlockedBySize || (blocksCount == maxBlockedBySize && key.compareTo(maxBlockedUser) < 0)){
-				maxBlockedBySize = blocksCount;
-				maxBlockedUser = key;
+			if(blocksCount > 0){
+				//updating the variables
+				if(blocksCount > maxBlockedBySize || (blocksCount == maxBlockedBySize && key.compareTo(maxBlockedUser) < 0)){
+					maxBlockedBySize = blocksCount;
+					maxBlockedUser = key;
+				}
 			}
 		}
 		return maxBlockedUser;
@@ -81,18 +85,18 @@ public class TweetStatsServiceImpl implements TweetStatsService {
 	@Override
 	public String getMostActiveFollower() {
 		int maxFollowSetSize = 0;
-		String mostPopUser = (String) userMap.keySet().toArray()[0];
+		String mostPopUser =  null;
 
 		for(String key: userMap.keySet()){
 			int followsCount = userMap.get(key)[1].size();
-
-			if(followsCount > maxFollowSetSize || (followsCount == maxFollowSetSize && key.compareTo(mostPopUser) < 0)){
-				maxFollowSetSize = followsCount;
-				mostPopUser = key;
+			if(followsCount > 0){
+				if(followsCount > maxFollowSetSize || (followsCount == maxFollowSetSize && key.compareTo(mostPopUser) < 0)){
+					maxFollowSetSize = followsCount;
+					mostPopUser = key;
+				}
 			}
 		}
 		return mostPopUser;
-
 	}
 
 	@Override
@@ -174,8 +178,6 @@ public class TweetStatsServiceImpl implements TweetStatsService {
 		}
 		return null;
 	}
-
-
 }
 
 
