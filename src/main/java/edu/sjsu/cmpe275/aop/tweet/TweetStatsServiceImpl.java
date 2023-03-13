@@ -1,8 +1,6 @@
 package edu.sjsu.cmpe275.aop.tweet;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.UUID;
+import java.util.*;
 
 public class TweetStatsServiceImpl implements TweetStatsService {
     /***
@@ -14,17 +12,15 @@ public class TweetStatsServiceImpl implements TweetStatsService {
 
 	@Override
 	public void resetStatsAndSystem() {
-		// TODO Auto-generated method stub
+		// TODO can use map.clear()
 
 		tweetMap = new HashMap<>();
 		userMap = new HashMap<>();
-		System.out.println("After resting stats : " + tweetMap + "and " + "user map is :" +userMap);
-		
+
 	}
     
 	@Override
 	public int getLengthOfLongestTweet() {
-		// TODO Auto-generated method stub
 		int length = 0;
 		for(UUID key : tweetMap.keySet()){
 			HashSet<String> set = tweetMap.get(key)[0];
@@ -40,7 +36,6 @@ public class TweetStatsServiceImpl implements TweetStatsService {
 
 	@Override
 	public UUID getMostPopularMessage() {
-		// TODO Auto-generated method stub
 
 		UUID mostPopMsgID = null;
 		int maxSharedWithSetSize = 0;
@@ -85,7 +80,6 @@ public class TweetStatsServiceImpl implements TweetStatsService {
 
 	@Override
 	public String getMostActiveFollower() {
-		// TODO Auto-generated method stub
 		int maxFollowSetSize = 0;
 		String mostPopUser = (String) userMap.keySet().toArray()[0];
 
@@ -103,7 +97,6 @@ public class TweetStatsServiceImpl implements TweetStatsService {
 
 	@Override
 	public UUID getMostContraversialMessage() {
-		// TODO Auto-generated method stub
 		double cScore = 0;
 		double finalcScore = 0;
 		UUID ansKey = null;
@@ -137,15 +130,49 @@ public class TweetStatsServiceImpl implements TweetStatsService {
 				}
 			}
 		}
-		System.out.println("Key : " +ansKey + " Controversial score :" + finalcScore);
 		return ansKey;
 
 	}
 
 	@Override
 	public int getMaximumMessageFanout() {
-		// TODO Auto-generated method stub
-		return 0;
+		int maximumFanout = 0;
+		for (UUID id: tweetMap.keySet()) {
+			int currentFanout = getTweetFanout(id, tweetMap.get(id));
+			maximumFanout = Math.max(maximumFanout, currentFanout);
+		}
+		return maximumFanout;
+	}
+
+	public int getTweetFanout(UUID tweetId, HashSet<String>[] tweetArray) {
+		Queue<String> stack = new LinkedList<>();
+		String originalUser = getUserOfTweet(tweetId.toString());
+		HashSet<String> set = new HashSet<>();
+		stack.addAll(tweetArray[4]);
+		while( !stack.isEmpty() ) {
+			int len = stack.size();
+			for (int i=0; i<len; i++) {
+				String id = stack.poll();
+				HashSet<String> tweetReplies = tweetMap.get(UUID.fromString(id))[4];
+				stack.addAll(tweetReplies);
+				String user = getUserOfTweet(id);
+				set.add(user);
+			}
+		}
+		set.remove(originalUser);
+		return set.size();
+	}
+
+	public String getUserOfTweet(String tweetId) {
+		for(String key: userMap.keySet()){
+			HashSet<String> Idset = userMap.get(key)[0];
+			for(String id: Idset){
+				if(Idset.contains(tweetId)) {
+					return key;
+				}
+			}
+		}
+		return null;
 	}
 
 

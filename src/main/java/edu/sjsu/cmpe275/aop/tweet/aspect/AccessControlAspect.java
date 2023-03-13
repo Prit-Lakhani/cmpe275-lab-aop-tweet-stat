@@ -10,13 +10,8 @@ import java.security.AccessControlException;
 import java.util.HashSet;
 
 @Aspect
-@Order(0)
+@Order(1)
 public class AccessControlAspect {
-    /***
-     * Following is a dummy implementation of this aspect.
-     * You are expected to provide an actual implementation based on the requirements, including adding/removing advices as needed.
-     * @throws Throwable 
-     */
 
 	@Autowired TweetStatsServiceImpl stats;
 
@@ -24,9 +19,6 @@ public class AccessControlAspect {
 	@Before("execution(* edu.sjsu.cmpe275.aop.tweet.TweetService.reply(..))")
 	public void replyAccessControl(JoinPoint joinPoint) throws Throwable {
 		Object[] obj = joinPoint.getArgs();
-		if(!stats.tweetMap.get(obj[1])[3].contains(obj[0].toString())){
-			throw new AccessControlException("Current user has not been shared with the original message");
-		}
 
 		//getting original sender of the messsage
 		String currUser = null;
@@ -36,11 +28,21 @@ public class AccessControlAspect {
 				if(Idset.contains(obj[1]));
 				currUser = key;
 			}
-
 		}
 
+		//user tries to reply their own message
+		if(obj[0] == currUser) {
+			throw new IllegalArgumentException("User cannot reply to their own message!");
+		}
+
+		//user has blocked the original message sender
 		if(stats.userMap.get(obj[0])[5].contains(currUser)){
 			throw new AccessControlException("Current user has blocked the original sender");
+		}
+
+		//message is not shared with user
+		if(!stats.tweetMap.get(obj[1])[3].contains(obj[0].toString())){
+			throw new AccessControlException("Current user has not been shared with the original message");
 		}
 	}
 

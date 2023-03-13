@@ -11,21 +11,16 @@ import java.io.IOException;
 
 
 @Aspect
-@Order(3)
+@Order(0)
 public class ValidationAspect {
-    /***
-     * Following is a dummy implementation of this aspect.
-     * You are expected to provide an actual implementation based on the requirements, including adding/removing advices as needed.
-     */
-
 	@Autowired
 	TweetStatsServiceImpl validate;
 
 	@Before("execution(public * edu.sjsu.cmpe275.aop.tweet.TweetServiceImpl.*(..))")
 	public void dummyBeforeAdvice(JoinPoint joinPoint) throws IOException {
-		System.out.printf("Permission check before the executuion of the metohd %s\n", joinPoint.getSignature().getName());
 		Object[] obj = joinPoint.getArgs();
 
+		//checking null or empty
 		for (Object o: obj) {
 			if(o == null ){
 				throw new IllegalArgumentException("Null value detected for the given parameter");
@@ -34,12 +29,11 @@ public class ValidationAspect {
 			}
 		}
 
-		System.out.println( "in validation aspects :"+validate.userMap);
-
 		//validating tweet()
 		if(joinPoint.getSignature().getName() == "tweet"){
 			System.out.println("\nValidating tweet");
 			System.out.println("Message length : "+obj[1].toString().length());
+			//validating message length
 			if(obj[1].toString().length() > 140){
 				throw new IllegalArgumentException("Message length must be less than 140 characters");
 			}
@@ -49,10 +43,12 @@ public class ValidationAspect {
 		if(joinPoint.getSignature().getName() == "reply"){
 			System.out.println("\nValidating tweet reply");
 
+			//validating message length
 			if(obj[2].toString().length() > 140){
 				throw new IllegalArgumentException("Message length must be less than 140 characters");
 			}
 
+			//checking whether message is exist or not
 			if(!validate.tweetMap.containsKey(obj[1])){
 					throw new IllegalArgumentException("Invalid UUID");
 				}
@@ -63,6 +59,8 @@ public class ValidationAspect {
 		//validating follow()
 		if(joinPoint.getSignature().getName() == "follow"){
 			System.out.println("Validating follow method");
+
+			//checking if the user is trying to follow themselves
 			if(obj[0] == obj[1]){
 				throw new IllegalArgumentException("User is trying to follow him/her self");
 			}
@@ -70,30 +68,12 @@ public class ValidationAspect {
 
 		//validating block()
 		if(joinPoint.getSignature().getName() == "block"){
-			System.out.println("Validating block method");
+			System.out.println("\nValidating block method");
+
+			//checking if the user is trying to block themselves
 			if(obj[0] == obj[1]){
 				throw new IllegalArgumentException("User is trying to block him/her self");
 			}
 		}
-
-		//validating like()
-		if(joinPoint.getSignature().getName() == "like"){
-			System.out.println("Validating like method");
-			if(!validate.tweetMap.containsKey(obj[1])){
-				throw new IllegalArgumentException("Invalid UUID");
-			}
-
-		}
-
-		//validating report()
-		if(joinPoint.getSignature().getName() == "report"){
-			System.out.println("Validating like method");
-			if(!validate.tweetMap.containsKey(obj[1])){
-				throw new IllegalArgumentException("Invalid UUID");
-			}
-
-		}
-
 	}
-	
 }

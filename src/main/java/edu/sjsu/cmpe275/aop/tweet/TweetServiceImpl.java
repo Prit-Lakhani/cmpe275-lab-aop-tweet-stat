@@ -14,9 +14,7 @@ public class TweetServiceImpl implements TweetService {
 
     @Override
     public UUID tweet(String user, String message) throws IllegalArgumentException, IOException {
-
         System.out.printf("User %s tweeted message: %s\n", user, message);
-
         return UUID.randomUUID();
     }
 
