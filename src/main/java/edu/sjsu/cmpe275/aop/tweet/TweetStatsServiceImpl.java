@@ -145,16 +145,16 @@ public class TweetStatsServiceImpl implements TweetStatsService {
 	}
 
 	public int getTweetFanout(UUID tweetId, HashSet<String>[] tweetArray) {
-		Queue<String> stack = new LinkedList<>();
+		Queue<String> queue = new LinkedList<>();
 		String originalUser = getUserOfTweet(tweetId.toString());
 		HashSet<String> set = new HashSet<>();
-		stack.addAll(tweetArray[4]);
-		while( !stack.isEmpty() ) {
-			int len = stack.size();
+		queue.addAll(tweetArray[4]);
+		while( !queue.isEmpty() ) {
+			int len = queue.size();
 			for (int i=0; i<len; i++) {
-				String id = stack.poll();
+				String id = queue.poll();
 				HashSet<String> tweetReplies = tweetMap.get(UUID.fromString(id))[4];
-				stack.addAll(tweetReplies);
+				queue.addAll(tweetReplies);
 				String user = getUserOfTweet(id);
 				set.add(user);
 			}
